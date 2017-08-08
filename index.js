@@ -9,9 +9,17 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
+  //console.log("I'm in the index.js" + api.getChildMessagesForNode(353))
+  api.getChildMessagesForNode(353).then(message => {
+    if(!message) return;
+    io.emit('chat message', message);
+  })
+  //io.emit('retrieved_messages', api.getChildMessagesForNode(353))
+  //io.emit('messages', api.getMessages)
+
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
-    api.getMessages();
+    //api.getMessages();
   });
 });
 

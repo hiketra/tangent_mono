@@ -33,6 +33,10 @@
           $('#messages').append($('<li>').text(msg));
           window.scrollTo(0, document.body.scrollHeight);
         });
+        socket.on('retrieved_messages', function(messages){
+          messages.map(message => $('#messages').append($('<li>').text(message)))
+          window.scrollTo(0, document.body.scrollHeight);
+        })
       });
     </script>
   </body>

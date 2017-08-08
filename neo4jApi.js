@@ -1,5 +1,4 @@
 const neo4j = require('neo4j-driver').v1;
-
 const driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo4j"));
 
 function testCreation() {
@@ -31,20 +30,26 @@ function getMessages() {
 
   resultPromise.then(result => {
     session.close();
-    result.records.map(record => console.log(record.get(0).properties.message))
+    //result.records.map(record => console.log(record.get(0).properties.message))
+    console.log(result.records)
+    console.log(result)
   })
 }
 
 //No discrimination between a child or channel
-function getChildMessagesForNodes(nodeId) {
+function getChildMessagesForNode(nodeId) {
   var session = driver.session();
-  console.log("Obtaining messages for {0}".format(nodeId))
-  const resultPromise = session.run(
-    'START n=node({0}) MATCH (n)-[:IS_PARENT_OF]->(m) return n,m'.format(nodeId)
-  )
-  resultPromise.then(result => {
+  console.log(`Obtaining messages for ${nodeId}`)
+  return resultPromise = session.run(
+    `START n=node(${nodeId}) MATCH (n)-[:IS_PARENT_OF]->(m) return m`
+  ).then(result => {
     session.close();
     result.records.map(record => console.log(record.get(0).properties.message))
+    return result.records.map(record => record.get(0).properties.message)
+  })
+  .catch(error => {
+    session.close();
+    throw error;
   })
 }
 
@@ -52,7 +57,7 @@ function getNodeTree(nodeId) {
   var session = driver.session();
   console.log("Obtaining messages for {0}".format(nodeId))
   const resultPromise = session.run(
-    'START n=node({0}) MATCH (n)-[:IS_PARENT_OF*..]->(m) WHERE m.isParent=TRUE RETURN n,m'
+    `START n=node(${nodeId}) MATCH (n)-[:IS_PARENT_OF*..]->(m) WHERE m.isParent=TRUE RETURN n,m`
   )
 }
 
@@ -62,12 +67,12 @@ function makeMessageParentAndCreateChild(nodeId, childMessage) {
   var session = driver.session();
   console.log("Making message {0} have child {1}".format(nodeId, childMessage))
   const resultPromise = session.run(
-    'START n=node({0}) SET node.isParent=TRUE CREATE (m:Message{message:{1}, timestamp: {2}}) CREATE (n)-[r:IS_PARENT_OF]->(m) RETURN n,m'.format(nodeId, childMessage.message, childMessage.timestamp)
+    `START n=node({0}) SET node.isParent=TRUE CREATE (m:Message{message:${childMessage.message}, timestamp: ${childMessage.timestamp}}) CREATE (n)-[r:IS_PARENT_OF]->(m) RETURN n,m`
   )
 }
 
 exports.testCreation = testCreation;
 exports.getMessages = getMessages;
-exports.getChildMessagesForNodes = getChildMessagesForNodes
+exports.getChildMessagesForNode = getChildMessagesForNode
 exports.getNodeTree = getNodeTree
 exports.makeMessageParentAndCreateChild = makeMessageParentAndCreateChild
