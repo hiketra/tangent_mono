@@ -15,15 +15,6 @@ io.on('connection', function(socket){
   });
 });
 
-// io.on('connection', function(socket){
-//   socket.on('chat message', function(msg){
-//     api.testCreation;
-//     console.log("something");
-//     io.emit('chat message', msg);
-//   }
-//   });
-// );
-
 http.listen(port, function(){
   console.log('listening on *:' + port);
 });
