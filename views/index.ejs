@@ -15,7 +15,11 @@
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
+    <ul id="messages">
+      <% messages.forEach(function(message){%>
+        <li><%= message %></li>
+        <% }) %>
+    </ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
@@ -34,7 +38,7 @@
           window.scrollTo(0, document.body.scrollHeight);
         });
         socket.on('retrieved_messages', function(messages){
-          messages.map(message => $('#messages').append($('<li>').text(message)))
+          $('#messages').append($('<li>').text(messages));
           window.scrollTo(0, document.body.scrollHeight);
         })
       });
