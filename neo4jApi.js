@@ -44,8 +44,29 @@ function getChildMessagesForNode(nodeId) {
     `START n=node(${nodeId}) MATCH (n)-[:IS_PARENT_OF]->(m) return m`
   ).then(result => {
     session.close();
-    result.records.map(record => console.log(record.get(0).properties.message))
-    return result.records.map(record => record.get(0).properties.message)
+    // result.records.map(record => console.log(record.get(0).properties.message))
+    // return result.records.map(record => record.get(0).properties.message)
+    //result.records.map(record => console.log(record.get(0).properties))
+
+    mapped = result.records.map(record => record.get(0).properties)
+
+    // var bigInt = require("big-integer");
+    // var jssort = require("js-sorting-algorithms");
+    // function comparer(recordA, recordB){
+    //   //console.log("record A: " + recordA.timestamp)
+    //   var a = bigInt(recordA.timestamp);
+    //   //console.log("record castA: " + a)
+    //   var b = bigInt(recordB.timestamp);
+    //   var comparison = a.compare(b)
+    //   //console.log(comparison)
+    //   return comparison;
+    // }
+    // var x = jssort.quickSort(mapped, undefined, undefined, comparer)
+    // console.log("SORTED LIST: ***** "+ x)
+    // return jssort.quickSort(mapped, undefined, undefined, comparer);
+    //
+    // // return result.records.map(record => record.get(0).properties)
+    return mapped
   })
   .catch(error => {
     session.close();
@@ -55,7 +76,7 @@ function getChildMessagesForNode(nodeId) {
 
 function getNodeTree(nodeId) {
   var session = driver.session();
-  console.log("Obtaining messages for {0}".format(nodeId))
+  console.log(`Obtaining messages for ${nodeId}`)
   const resultPromise = session.run(
     `START n=node(${nodeId}) MATCH (n)-[:IS_PARENT_OF*..]->(m) WHERE m.isParent=TRUE RETURN n,m`
   )
@@ -65,10 +86,32 @@ function makeMessageParentAndCreateChild(nodeId, childMessage) {
   //TODO: Update relationship on nodeId, make it child
   //TODO: Graphical updates to frontend - message has blue dot, tree updated/re-rendered
   var session = driver.session();
-  console.log("Making message {0} have child {1}".format(nodeId, childMessage))
-  const resultPromise = session.run(
-    `START n=node({0}) SET node.isParent=TRUE CREATE (m:Message{message:${childMessage.message}, timestamp: ${childMessage.timestamp}}) CREATE (n)-[r:IS_PARENT_OF]->(m) RETURN n,m`
-  )
+  console.log(`Making message ${nodeId} have child ${childMessage}`)
+  return resultPromise = session.run(
+    `START n=node(${nodeId}) SET n.isParent=TRUE CREATE (m:Message{message:'${childMessage}', timestamp: '${Date.now()}'}) CREATE (n)-[r:IS_PARENT_OF]->(m) RETURN n,m`
+  ).catch(error => {
+      session.close();
+      throw error;
+    })
+}
+
+function sortByTimestamp(list){
+  sortedList = list.records.map(record => record.get(0).properties)
+  console.log("mapped list: " + sortedList)
+  var bigInt = require("big-integer");
+  var jssort = require("js-sorting-algorithms");
+  function comparer(recordA, recordB){
+    //console.log("record A: " + recordA.timestamp)
+    var a = bigInt(recordA.timestamp);
+    //console.log("record castA: " + a)
+    var b = bigInt(recordB.timestamp);
+    var comparison = a.compare(b)
+    //console.log(comparison)
+    return comparison;
+  }
+  var x = jssort.quickSort(sortedList, undefined, undefined, comparer);
+  console.log("SORTED LIST: ***** "+ x)
+  return jssort.quickSort(sortedList, undefined, undefined, comparer);
 }
 
 exports.testCreation = testCreation;

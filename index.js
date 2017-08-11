@@ -3,15 +3,18 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 var api = require('./neo4jApi');
+var _ = require('lodash');
 
 app.set('view engine', 'ejs');
 
 app.get('/', function(req,res){
   api.getChildMessagesForNode(353).then(msgs => {
+    console.log("obtained: " + msgs)
     console.log("about to remder page" + msgs)
     debugger;
     console.log("messages:" + msgs)
-    res.render('index.ejs', {messages: msgs})
+    let sortedByTimestampMsgs = _.sortBy(msgs, ['timestamp'])
+    res.render('index.ejs', {messages: sortedByTimestampMsgs})
   }).catch(error=> {
     console.log(error)
   })
@@ -30,9 +33,12 @@ io.on('connection', function(socket){
   //io.emit('retrieved_messages', api.getChildMessagesForNode(353))
   //io.emit('messages', api.getMessages)
 
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
-    //api.getMessages();
+  socket.on('chat message', function(messageBundle){
+    console.log(`received message:${messageBundle}`)
+    api.makeMessageParentAndCreateChild(messageBundle.parentNode, messageBundle.message).then(x=>{
+    io.emit('chat message', messageBundle.message)}
+  ).catch(error => {console.log(error)})
+      //api.getMessages();
   });
 });
 

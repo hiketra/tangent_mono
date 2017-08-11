@@ -17,7 +17,7 @@
   <body>
     <ul id="messages">
       <% messages.forEach(function(message){%>
-        <li><%= message %></li>
+        <li><%= message.message %></li>
         <% }) %>
     </ul>
     <form action="">
@@ -27,9 +27,16 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function () {
+        var channel = 353;
         var socket = io();
         $('form').submit(function(){
-          socket.emit('chat message', $('#m').val());
+          var msg = $('#m').val()
+          console.log(channel)
+          console.log(msg)
+          var messageBundle = {parentNode: channel, message: msg.toString()}
+          console.log(`bundle node ${messageBundle.parentNode} message ${messageBundle.message}`)
+          console.log("Inside the page" + messageBundle)
+          socket.emit('chat message', messageBundle);
           $('#m').val('');
           return false;
         });
