@@ -13,13 +13,7 @@ app.get('/', function(req,res){
     console.log("obtained: " + msgs)
     console.log("about to remder page" + msgs)
     debugger;
-    console.log("messages:" + msgs)
-    function convertMessageDateFormat(msg) {
-      return {message: msg.message, timestamp: new Date(msg.timeYear, msg.timeMonth, msg.timeDay, msg.timeSeconds, msg.timeMilliseconds)}
-    }
-    let formattedMessages = msgs.map(message => convertMessageDateFormat(message))
-    let sortedByTimestampMsgs = _.sortBy(formattedMessages, ['timestamp'])
-    res.render('index.ejs', {messages: sortedByTimestampMsgs})
+    res.render('index.ejs', {messages: msgs.reverse()})
   }).catch(error=> {
     console.log(error)
   })

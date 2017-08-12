@@ -5,6 +5,7 @@
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
+      #current-chat {width: 75%}
       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
       form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
@@ -15,40 +16,42 @@
     </style>
   </head>
   <body>
-    <ul id="messages">
-      <% messages.forEach(function(message){%>
-        <li><%= message.message %></li>
-        <% }) %>
-    </ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-      $(function () {
-        var channel = 370;
-        var socket = io();
-        $('form').submit(function(){
-          var msg = $('#m').val()
-          console.log(channel)
-          console.log(msg)
-          var messageBundle = {parentNode: channel, message: msg.toString()}
-          console.log(`bundle node ${messageBundle.parentNode} message ${messageBundle.message}`)
-          console.log("Inside the page" + messageBundle)
-          socket.emit('chat message', messageBundle);
-          $('#m').val('');
-          return false;
+    <div id="current-chat">
+      <ul id="messages">
+        <% messages.forEach(function(message){%>
+          <li id="<%= message.identity %>"><%= message.message %> <div align="right"> <%= message.timeHours %>: <%= message.timeMinutes %></div></li>
+          <% }) %>
+      </ul>
+      <form action="">
+        <input id="m" autocomplete="off" /><button>Send</button>
+      </form>
+      <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+      <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+      <script>
+        $(function () {
+          var channel = 370;
+          var socket = io();
+          $('form').submit(function(){
+            var msg = $('#m').val()
+            console.log(channel)
+            console.log(msg)
+            var messageBundle = {parentNode: channel, message: msg.toString()}
+            console.log(`bundle node ${messageBundle.parentNode} message ${messageBundle.message}`)
+            console.log("Inside the page" + messageBundle)
+            socket.emit('chat message', messageBundle);
+            $('#m').val('');
+            return false;
+          });
+          socket.on('chat message', function(msg){
+            $('#messages').append($('<li>').text(msg));
+            window.scrollTo(0, document.body.scrollHeight);
+          });
+          socket.on('retrieved_messages', function(messages){
+            $('#messages').append($('<li>').text(messages));
+            window.scrollTo(0, document.body.scrollHeight);
+          })
         });
-        socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(msg));
-          window.scrollTo(0, document.body.scrollHeight);
-        });
-        socket.on('retrieved_messages', function(messages){
-          $('#messages').append($('<li>').text(messages));
-          window.scrollTo(0, document.body.scrollHeight);
-        })
-      });
-    </script>
+      </script>
+    </div>
   </body>
 </html>

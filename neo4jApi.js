@@ -49,7 +49,22 @@ function getChildMessagesForNode(nodeId) {
     //result.records.map(record => console.log(record.get(0).properties))
     console.log(JSON.stringify(result, null, 2));
 
-    mapped = result.records.map(record => record.get(0).properties)
+    function extractPropertiesAndNodeId(properties, identity) {
+      return {
+        //TODO: Account for low and high math/big ints
+        identity: identity.low,
+        //this would be a lot easier if I could get the damn babel spread operator working
+        message: properties.message,
+        timeSeconds: properties.timeSeconds,
+        timeMinutes: properties.timeMinitues,
+        timeHours: properties.timeHours,
+        timeDay: properties.timeDay,
+        timeMonth: properties.timeMonth,
+        timeYear: properties.timeYear
+      }
+    }
+
+    mapped = result.records.map(record => extractPropertiesAndNodeId(record.get(0).properties, record.get(0).identity))
 
     // var bigInt = require("big-integer");
     // var jssort = require("js-sorting-algorithms");
@@ -98,25 +113,6 @@ function makeMessageParentAndCreateChild(nodeId, childMessage) {
       session.close();
       throw error;
     })
-}
-
-function sortByTimestamp(list){
-  sortedList = list.records.map(record => record.get(0).properties)
-  console.log("mapped list: " + sortedList)
-  var bigInt = require("big-integer");
-  var jssort = require("js-sorting-algorithms");
-  function comparer(recordA, recordB){
-    //console.log("record A: " + recordA.timestamp)
-    var a = bigInt(recordA.timestamp);
-    //console.log("record castA: " + a)
-    var b = bigInt(recordB.timestamp);
-    var comparison = a.compare(b)
-    //console.log(comparison)
-    return comparison;
-  }
-  var x = jssort.quickSort(sortedList, undefined, undefined, comparer);
-  console.log("SORTED LIST: ***** "+ x)
-  return jssort.quickSort(sortedList, undefined, undefined, comparer);
 }
 
 exports.testCreation = testCreation;
