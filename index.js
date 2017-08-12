@@ -5,15 +5,20 @@ var port = process.env.PORT || 3000;
 var api = require('./neo4jApi');
 var _ = require('lodash');
 
+
 app.set('view engine', 'ejs');
 
 app.get('/', function(req,res){
-  api.getChildMessagesForNode(353).then(msgs => {
+  api.getChildMessagesForNode(370).then(msgs => {
     console.log("obtained: " + msgs)
     console.log("about to remder page" + msgs)
     debugger;
     console.log("messages:" + msgs)
-    let sortedByTimestampMsgs = _.sortBy(msgs, ['timestamp'])
+    function convertMessageDateFormat(msg) {
+      return {message: msg.message, timestamp: new Date(msg.timeYear, msg.timeMonth, msg.timeDay, msg.timeSeconds, msg.timeMilliseconds)}
+    }
+    let formattedMessages = msgs.map(message => convertMessageDateFormat(message))
+    let sortedByTimestampMsgs = _.sortBy(formattedMessages, ['timestamp'])
     res.render('index.ejs', {messages: sortedByTimestampMsgs})
   }).catch(error=> {
     console.log(error)

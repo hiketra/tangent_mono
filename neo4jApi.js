@@ -47,6 +47,7 @@ function getChildMessagesForNode(nodeId) {
     // result.records.map(record => console.log(record.get(0).properties.message))
     // return result.records.map(record => record.get(0).properties.message)
     //result.records.map(record => console.log(record.get(0).properties))
+    console.log(JSON.stringify(result, null, 2));
 
     mapped = result.records.map(record => record.get(0).properties)
 
@@ -74,6 +75,10 @@ function getChildMessagesForNode(nodeId) {
   })
 }
 
+function createNewChannel(channelName) {
+  return "boo"
+}
+
 function getNodeTree(nodeId) {
   var session = driver.session();
   console.log(`Obtaining messages for ${nodeId}`)
@@ -88,7 +93,7 @@ function makeMessageParentAndCreateChild(nodeId, childMessage) {
   var session = driver.session();
   console.log(`Making message ${nodeId} have child ${childMessage}`)
   return resultPromise = session.run(
-    `START n=node(${nodeId}) SET n.isParent=TRUE CREATE (m:Message{message:'${childMessage}', timestamp: '${Date.now()}'}) CREATE (n)-[r:IS_PARENT_OF]->(m) RETURN n,m`
+    `START n=node(${nodeId}) SET n.isParent=TRUE CREATE (m:Message{message:'${childMessage}', timeMilliseconds: '${new Date().getMilliseconds()}', timeSeconds: '${new Date().getSeconds()}', timeMinitues: '${new Date().getMinutes()}', timeHours: '${new Date().getHours()}', timeDay: '${new Date().getDay()}', timeMonth: '${new Date().getMonth()}', timeYear: '${new Date().getFullYear()}'}) CREATE (n)-[r:IS_PARENT_OF]->(m) RETURN n,m`
   ).catch(error => {
       session.close();
       throw error;
