@@ -10,8 +10,6 @@ app.set('view engine', 'ejs');
 
 app.get('/', function(req,res){
   api.getChildMessagesForNode(370).then(msgs => {
-    console.log("obtained: " + msgs)
-    console.log("about to remder page" + msgs)
     debugger;
     res.render('index.ejs', {messages: msgs.reverse()})
   }).catch(error=> {
@@ -34,8 +32,8 @@ io.on('connection', function(socket){
 
   socket.on('chat message', function(messageBundle){
     console.log(`received message:${messageBundle}`)
-    api.makeMessageParentAndCreateChild(messageBundle.parentNode, messageBundle.message).then(x=>{
-    io.emit('chat message', messageBundle.message)}
+    api.makeMessageParentAndCreateChild(messageBundle.parentNode, messageBundle.message).then(msg=>{
+    io.emit('chat message', msg)}
   ).catch(error => {console.log(error)})
       //api.getMessages();
   });

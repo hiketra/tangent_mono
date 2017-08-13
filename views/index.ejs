@@ -14,12 +14,18 @@
       #messages li:nth-child(odd) { background: #eee; }
       #messages { margin-bottom: 40px }
     </style>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
   <body>
     <div id="current-chat">
       <ul id="messages">
         <% messages.forEach(function(message){%>
-          <li id="<%= message.identity %>"><%= message.message %> <div align="right"> <%= message.timeHours %>: <%= message.timeMinutes %></div></li>
+          <li id="<%= message.identity %>">
+              <%= message.message %> <div align="right"> <%= message.timeHours %>:<%= message.timeMinutes %>
+                <button type="button" class="btn btn-default" aria-label="Right Align" onclick="createSubthread(<%=message.identity%>)">
+                  <span class="glyphicon glyphicon-leaf" aria-hidden="true"></span>
+              </button>
+              </div></li>
           <% }) %>
       </ul>
       <form action="">
@@ -28,10 +34,40 @@
       <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
       <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
       <script>
+
+        var subthreadCreation = false;
+        var newParent = null;
+
+        function createSubthread(node) {
+          console.log("in the subthread, setting node to: " + node)
+          subthreadCreation = true;
+          newParent = node;
+        }
+
+        function addNewMessage(msg) {
+          var liElement = document.createElement("li");
+          liElement.setAttribute("id", msg.identity);
+          liElement.appendChild(document.createTextNode(msg.message));
+          var timeStamp = document.createElement("div");
+          timeStamp.setAttribute("align", "right");
+          timeStamp.innerHTML = `${msg.timeHours}:${msg.timeMinutes} <button type='button' class='btn btn-default' aria-label='Right Align' onclick='createSubthread(${msg.identity})'>
+              <span class='glyphicon glyphicon-leaf' aria-hidden='true'></span>
+              </button>`
+          liElement.appendChild(timeStamp);
+          $('#messages').append(liElement);
+        }
+
         $(function () {
-          var channel = 370;
+
           var socket = io();
           $('form').submit(function(){
+            if(subthreadCreation) {
+              var channel = newParent;
+            }
+            else {
+              var channel = 370;
+            }
+            console.log(subthreadCreation)
             var msg = $('#m').val()
             console.log(channel)
             console.log(msg)
@@ -40,10 +76,11 @@
             console.log("Inside the page" + messageBundle)
             socket.emit('chat message', messageBundle);
             $('#m').val('');
+            subthreadCreation = false;
             return false;
           });
           socket.on('chat message', function(msg){
-            $('#messages').append($('<li>').text(msg));
+            addNewMessage(msg);
             window.scrollTo(0, document.body.scrollHeight);
           });
           socket.on('retrieved_messages', function(messages){

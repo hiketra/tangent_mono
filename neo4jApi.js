@@ -1,6 +1,21 @@
 const neo4j = require('neo4j-driver').v1;
 const driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo4j"));
 
+function extractPropertiesAndNodeId(properties, identity) {
+  return {
+    //TODO: Account for low and high math/big ints
+    identity: identity.low,
+    //this would be a lot easier if I could get the damn babel spread operator working
+    message: properties.message,
+    timeSeconds: properties.timeSeconds,
+    timeMinutes: properties.timeMinitues,
+    timeHours: properties.timeHours,
+    timeDay: properties.timeDay,
+    timeMonth: properties.timeMonth,
+    timeYear: properties.timeYear
+  }
+}
+
 function testCreation() {
   var session = driver.session();
   console.log("blah")
@@ -47,23 +62,6 @@ function getChildMessagesForNode(nodeId) {
     // result.records.map(record => console.log(record.get(0).properties.message))
     // return result.records.map(record => record.get(0).properties.message)
     //result.records.map(record => console.log(record.get(0).properties))
-    console.log(JSON.stringify(result, null, 2));
-
-    function extractPropertiesAndNodeId(properties, identity) {
-      return {
-        //TODO: Account for low and high math/big ints
-        identity: identity.low,
-        //this would be a lot easier if I could get the damn babel spread operator working
-        message: properties.message,
-        timeSeconds: properties.timeSeconds,
-        timeMinutes: properties.timeMinitues,
-        timeHours: properties.timeHours,
-        timeDay: properties.timeDay,
-        timeMonth: properties.timeMonth,
-        timeYear: properties.timeYear
-      }
-    }
-
     mapped = result.records.map(record => extractPropertiesAndNodeId(record.get(0).properties, record.get(0).identity))
 
     // var bigInt = require("big-integer");
@@ -108,8 +106,14 @@ function makeMessageParentAndCreateChild(nodeId, childMessage) {
   var session = driver.session();
   console.log(`Making message ${nodeId} have child ${childMessage}`)
   return resultPromise = session.run(
-    `START n=node(${nodeId}) SET n.isParent=TRUE CREATE (m:Message{message:'${childMessage}', timeMilliseconds: '${new Date().getMilliseconds()}', timeSeconds: '${new Date().getSeconds()}', timeMinitues: '${new Date().getMinutes()}', timeHours: '${new Date().getHours()}', timeDay: '${new Date().getDay()}', timeMonth: '${new Date().getMonth()}', timeYear: '${new Date().getFullYear()}'}) CREATE (n)-[r:IS_PARENT_OF]->(m) RETURN n,m`
-  ).catch(error => {
+    `START n=node(${nodeId}) SET n.isParent=TRUE CREATE (m:Message{message:'${childMessage}', timeMilliseconds: '${new Date().getMilliseconds()}', timeSeconds: '${new Date().getSeconds()}', timeMinitues: '${new Date().getMinutes()}', timeHours: '${new Date().getHours()}', timeDay: '${new Date().getDate()}', timeMonth: '${new Date().getMonth()}', timeYear: '${new Date().getFullYear()}'}) CREATE (n)-[r:IS_PARENT_OF]->(m) RETURN m`
+  ).then(result => {
+    session.close()
+    let x = extractPropertiesAndNodeId(result.records[0].get(0).properties, result.records[0].get(0).identity)
+    console.log("message bundle:" + JSON.stringify(x, null, 2))
+    return x
+  })
+  .catch(error => {
       session.close();
       throw error;
     })
