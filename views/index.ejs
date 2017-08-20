@@ -90,5 +90,13 @@
         });
       </script>
     </div>
+    <div id="tree" align="right">
+      <ul algin="left">
+      <% relations.forEach(function(relation){%>
+        <li id="<%= relation.identity %>">
+            <%= relation.identity %></li>
+        <% }) %>
+      </ul>
+    </div>
   </body>
 </html>

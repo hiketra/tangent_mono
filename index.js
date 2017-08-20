@@ -9,9 +9,9 @@ var _ = require('lodash');
 app.set('view engine', 'ejs');
 
 app.get('/', function(req,res){
-  api.getChildMessagesForNode(370).then(msgs => {
+  api.getChildMessagesForNode(375).then(msgs => {
     debugger;
-    res.render('index.ejs', {messages: msgs.reverse()})
+    res.render('index.ejs', {messages: msgs.reverse(), relations: [{identity:"212"}, {identity:"2211"}]})
   }).catch(error=> {
     console.log(error)
   })
@@ -32,6 +32,7 @@ io.on('connection', function(socket){
 
   socket.on('chat message', function(messageBundle){
     console.log(`received message:${messageBundle}`)
+    api.getNodeTree(370)
     api.makeMessageParentAndCreateChild(messageBundle.parentNode, messageBundle.message).then(msg=>{
     io.emit('chat message', msg)}
   ).catch(error => {console.log(error)})
