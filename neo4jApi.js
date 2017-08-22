@@ -1,4 +1,5 @@
 const neo4j = require('neo4j-driver').v1;
+const FlatToNested = require('flat-to-nested');
 const driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo4j"));
 
 function extractPropertiesAndNodeId(properties, identity) {
@@ -130,11 +131,9 @@ function getNodeTree(nodeId) {
       let parent = maxRecord[0].identity.low
       let child = maxRecord[1].identity.low
       return {
-        parentId: parent,
-        childId: child,
-        //TODO:
-        isChildParent: maxRecord[1].properties.isParent,
-        relationDegree: relationDegree
+        parent: parent,
+        id: child,
+        message: maxRecord[1].properties.message
         // parentMessage: parent.properties.message}
         // childMessage: child.properties.message
       }
@@ -144,14 +143,9 @@ function getNodeTree(nodeId) {
     //let extracted = results.records.map(result => {console.log("rrelation: " + Object.getOwnPropertyNames(result.get(0)[0][0]) + "contents: "+ result.get(0)[0][0].identity + "," +  result.get(0)[0][1].identity)})
     //console.log(extracted)
     let extracted = results.records.map(result => extraction(result.get(0)))
-    //
-    // function
-    //
-    // let parentNodes
-    // extracted.forEach(extraction =>
-    //
-    // )
-    console.log(extracted)
+    extracted.push({id: 370})
+    flatToNested = new FlatToNested();
+    console.log(JSON.stringify(flatToNested.convert(extracted), null, 2))
    return extracted
   }).catch(error => {
       session.close();
