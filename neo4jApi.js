@@ -125,14 +125,16 @@ function getNodeTree(nodeId) {
 
     function extraction(relation) {
       //takes in result.get(0)
-      let length = relation.length
-      let maxRecord = relation[length-1]
+      let relationDegree = relation.length-1 //0-indexed tree-level
+      let maxRecord = relation[relationDegree]
       let parent = maxRecord[0].identity.low
       let child = maxRecord[1].identity.low
       return {
         parentId: parent,
-        childId: child
+        childId: child,
         //TODO:
+        isChildParent: maxRecord[1].properties.isParent,
+        relationDegree: relationDegree
         // parentMessage: parent.properties.message}
         // childMessage: child.properties.message
       }
@@ -142,6 +144,13 @@ function getNodeTree(nodeId) {
     //let extracted = results.records.map(result => {console.log("rrelation: " + Object.getOwnPropertyNames(result.get(0)[0][0]) + "contents: "+ result.get(0)[0][0].identity + "," +  result.get(0)[0][1].identity)})
     //console.log(extracted)
     let extracted = results.records.map(result => extraction(result.get(0)))
+    //
+    // function
+    //
+    // let parentNodes
+    // extracted.forEach(extraction =>
+    //
+    // )
     console.log(extracted)
    return extracted
   }).catch(error => {
