@@ -21,18 +21,8 @@ app.get('/', function(req, res) {
     })
 });
 
-// app.get('/', function(req, res){
-//   res.sendFile(__dirname + '/index.html');
-// });
 
 io.on('connection', function(socket) {
-    //console.log("I'm in the index.js" + api.getChildMessagesForNode(353))
-    // api.getChildMessagesForNode(353).then(messages => {
-    //   if(!message) return;
-    //   io.emit('retrieved_messages', messages);
-    // })
-    //io.emit('retrieved_messages', api.getChildMessagesForNode(353))
-    //io.emit('messages', api.getMessages)
 
     socket.on('chat message', function(messageBundle) {
         console.log(`received message:${messageBundle}`)
@@ -42,7 +32,6 @@ io.on('connection', function(socket) {
         }).catch(error => {
             console.log(error)
         })
-        //api.getMessages();
     });
 });
 
