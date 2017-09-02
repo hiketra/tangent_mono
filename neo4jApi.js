@@ -35,7 +35,8 @@ function getChildMessagesForNode(nodeId) {
 }
 
 function createNewChannel(channelName) {
-  return "boo"
+//TODO:
+  return "i'm unimplemented :)"
 }
 
 function getNodeTree(nodeId) {
