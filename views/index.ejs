@@ -139,18 +139,32 @@
                     window.scrollTo(0, document.body.scrollHeight);
                 })
             });
+
         </script>
     </div>
     <div id="tree" align="right">
 
         <ul algin="left">
-            <ul>
-                <% nodes.forEach(function(node){ %>
-                    <li id="<%= node.id %>">
-                        <%= node.message %>
-                    </li>
-                    <% }) %>
-                        < }) %>
+            <%
+                console.log(`obtained nodes ${JSON.stringify(nodes, null, 2)}`);
+                var listTree = ``;
+                function traverse(branches) {
+                  for(i=0; i < branches.length; i++) {
+                    // console.log(branches)
+                    obj = branches[i]
+                    console.log(obj)
+                    listTree += `<li id=${obj.id}> ${obj.message} </li>`;
+                    if(obj.hasOwnProperty('children')) {
+                      listTree += `<ul id=${obj.id}>`;
+                      traverse(branches[i].children);
+                      listTree += `</ul>`
+                    }
+                  }
+                }
+                traverse(nodes.children)
+                %>
+                <%- listTree %>
+
             </ul>
     </div>
 </body>

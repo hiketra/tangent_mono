@@ -64,8 +64,9 @@ function getNodeTree(nodeId) {
     let extracted = results.records.map(result => extraction(result.get(0)))
     extracted.push({id: 370})
     flatToNested = new FlatToNested();
-    console.log(JSON.stringify(flatToNested.convert(extracted), null, 2))
-   return extracted
+    let flattened = flatToNested.convert(extracted)
+    console.log("flattened:" + flattened)
+   return flattened
   }).catch(error => {
       session.close();
       console.log(error)
@@ -92,8 +93,6 @@ function makeMessageParentAndCreateChild(nodeId, childMessage) {
     })
 }
 
-exports.testCreation = testCreation;
-exports.getMessages = getMessages;
 exports.getChildMessagesForNode = getChildMessagesForNode
 exports.getNodeTree = getNodeTree
 exports.makeMessageParentAndCreateChild = makeMessageParentAndCreateChild
