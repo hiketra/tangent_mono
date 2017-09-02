@@ -19,6 +19,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "big-integer": "^1.6.23",
     "ejs": "^2.5.7",
+    "flat-to-nested": "github:joaonuno/flat-to-nested-js",
     "lodash": "^4.17.4"
   }
 }

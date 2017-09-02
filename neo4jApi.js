@@ -1,9 +1,10 @@
 const neo4j = require('neo4j-driver').v1;
+const FlatToNested = require('flat-to-nested');
 const driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo4j"));
 
 function extractPropertiesAndNodeId(properties, identity) {
   return {
-    //TODO: Account for low and high math/big ints
+    //TODO: Account for low and high math/big ints, just do a search for identity.low
     identity: identity.low,
     //this would be a lot easier if I could get the damn babel spread operator working
     message: properties.message,
@@ -95,9 +96,62 @@ function createNewChannel(channelName) {
 function getNodeTree(nodeId) {
   var session = driver.session();
   console.log(`Obtaining messages for ${nodeId}`)
-  const resultPromise = session.run(
-    `START n=node(${nodeId}) MATCH (n)-[:IS_PARENT_OF*..]->(m) WHERE m.isParent=TRUE RETURN n,m`
-  )
+  return resultPromise = session.run(
+    `START n=node(${nodeId}) MATCH (n)-[r*..]->(m) WHERE m.isParent=TRUE RETURN EXTRACT(rel IN r | [startNode(rel),endNode(rel)]) as nodePairCollection`
+  ).then(results => {
+    session.close()
+
+    // function extractRelationLinks(relation) {
+    //   console.log(typeof relation)
+    //   console.log(Object.getOwnPropertyNames(relation))
+    //   console.log('function scope' + relation)
+    //   //Takes input of form (NODE_ID)-[:IS_PARENT_OF]->(375)
+    //   console.log("string version" + relation.toString())
+    //   let boo = relation.toString()
+    //   let relations = boo.split(",")
+    //   let finalRelation = relations[relation.length]
+    //
+    //
+    //   //TODO: EXTREMELY CRUDE! Change to Regex
+    //   let chunksOfRelation = finalRelation.split("(").join(",").split(")").join(",").split(",")
+    //   let parent = chunksOfRelation.get(0)
+    //   let child = chunksOfRelation.get(chunksOfRelation.length - 1)
+    //   //only care about the relation of highest degree from root node - otherwise relation data just being replicated
+    //   return {
+    //     parent: parent,
+    //     //TODO: Update logic to allow for high int values
+    //     child: child
+    //   }
+    // }
+
+    function extraction(relation) {
+      //takes in result.get(0)
+      let relationDegree = relation.length-1 //0-indexed tree-level
+      let maxRecord = relation[relationDegree]
+      let parent = maxRecord[0].identity.low
+      let child = maxRecord[1].identity.low
+      return {
+        parent: parent,
+        id: child,
+        message: maxRecord[1].properties.message
+        // parentMessage: parent.properties.message}
+        // childMessage: child.properties.message
+      }
+    }
+    console.log(results)
+
+    //let extracted = results.records.map(result => {console.log("rrelation: " + Object.getOwnPropertyNames(result.get(0)[0][0]) + "contents: "+ result.get(0)[0][0].identity + "," +  result.get(0)[0][1].identity)})
+    //console.log(extracted)
+    let extracted = results.records.map(result => extraction(result.get(0)))
+    extracted.push({id: 370})
+    flatToNested = new FlatToNested();
+    console.log(JSON.stringify(flatToNested.convert(extracted), null, 2))
+   return extracted
+  }).catch(error => {
+      session.close();
+      console.log(error)
+      throw error;
+    })
 }
 
 function makeMessageParentAndCreateChild(nodeId, childMessage) {
