@@ -68,10 +68,18 @@ io.on('connection', function(socket) {
 
 	socket.on('chat message', function(messageBundle) {
 		console.log(`received message:${messageBundle}`)
-		api.getNodeTree(370)
+		//api.getNodeTree(370)
     debugger;
-		api.makeMessageParentAndCreateChild(messageBundle.parentNode, messageBundle.message).then(msg => {
-			io.sockets.in(messageBundle.parentNode).emit('chat message', msg)
+		var parentNode = messageBundle.parentNode
+		api.makeMessageParentAndCreateChild(parentNode, messageBundle.message).then(msg => {
+			debugger;
+			api.getChannelInfoById(messageBundle.currentRoom).then(channelInfo => {
+			api.getNodeTree(channelInfo).then(tree => {
+				debugger;
+			io.sockets.in(parentNode).emit('chat message', msg);
+			io.sockets.in(messageBundle.currentRoom).emit('tree update', tree);
+			debugger;
+		})})
 		}).catch(error => {
 			console.log(error)
 		})

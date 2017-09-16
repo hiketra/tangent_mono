@@ -79,6 +79,7 @@ function makeMessageParentAndCreateChild(nodeId, childMessage) {
 	//TODO: Update relationship on nodeId, make it child
 	//TODO: Graphical updates to frontend - message has blue dot, tree updated/re-rendered
 	var session = driver.session();
+  debugger;
 	console.log(`Making message ${nodeId} have child ${childMessage}`)
 	return resultPromise = session.run(
 			`START n=node(${nodeId}) SET n.isParent=TRUE CREATE (m:Message{message:'${childMessage}', timeMilliseconds: '${new Date().getMilliseconds()}', timeSeconds: '${new Date().getSeconds()}', timeMinitues: '${new Date().getMinutes()}', timeHours: '${new Date().getHours()}', timeDay: '${new Date().getDate()}', timeMonth: '${new Date().getMonth()}', timeYear: '${new Date().getFullYear()}'}) CREATE (n)-[r:IS_PARENT_OF]->(m) RETURN m`
@@ -86,6 +87,7 @@ function makeMessageParentAndCreateChild(nodeId, childMessage) {
 			session.close()
 			let x = extractPropertiesAndNodeId(result.records[0].get(0).properties, result.records[0].get(0).identity)
 			console.log("message bundle:" + JSON.stringify(x, null, 2))
+      debugger;
 			return x
 		})
 		.catch(error => {

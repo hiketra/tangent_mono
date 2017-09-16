@@ -150,7 +150,7 @@ Thanks :)*/
 		}
 
 		#current-chat {
-			width: 70%;
+			width: 50%;
       display: inline-block;
 		}
 
@@ -260,6 +260,7 @@ Thanks :)*/
 					console.log(channel)
 					console.log(msg)
 					var messageBundle = {
+						currentRoom: <%= channelId %>,
 						parentNode: channel,
 						message: msg.toString()
 					}
@@ -279,14 +280,47 @@ Thanks :)*/
 				socket.on('retrieved_messages', function(messages) {
 					$('#messages').append($('<li>').text(messages));
 					window.scrollTo(0, document.body.scrollHeight);
-				})
+				});
+				socket.on('tree update', function(tree) {
+					debugger;
+					console.log(tree);
+					if('children' in tree){
+					console.log(`obtained nodes ${JSON.stringify(tree, null, 2)}`);
+					var listTree = ``;
+					debugger;
+					function traverse(branches) {
+						debugger;
+						for(let i=0; i < branches.length; i++) {
+							// console.log(branches)
+							debugger;
+							obj = branches[i]
+							console.log(obj)
+							listTree += `<li id=${obj.id}> <a href='/chat/${obj.id}'>${obj.message} </a>`;
+							if(obj.hasOwnProperty('children')) {
+								debugger;
+								listTree += `<ul id=${obj.id}>`;
+								traverse(branches[i].children);
+								listTree += `</ul>`
+							}
+							else {
+								debugger;
+							}
+							listTree += ` </li>`;
+						}
+					}
+					console.log(`child nodes to be processed nodes ${JSON.stringify(tree.children, null, 2)}`);
+					traverse(tree.children)
+				}
+				debugger;
+						$('#updateable').empty().append('boo' + listTree);
+				});
 			});
 		</script>
 	</div>
-	<div class="tree tree-position" align="right">
+	<div class="tree tree-position" align="right" id='tree'>
 		<ul align="right">
 			<li><a href="chat/<%=nodes.id%>"><%= nodes.message%></a>
-				<ul>
+				<ul id="updateable">
 					<%
                 if('children' in nodes){
                 console.log(`obtained nodes ${JSON.stringify(nodes, null, 2)}`);
