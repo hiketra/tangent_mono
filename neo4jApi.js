@@ -34,11 +34,6 @@ function getChildMessagesForNode(nodeId) {
   })
 }
 
-function createNewChannel(channelName) {
-//TODO:
-  return "i'm unimplemented :)"
-}
-
 function getNodeTree(nodeId) {
   var session = driver.session();
   console.log(`Obtaining messages for ${nodeId}`)
@@ -94,6 +89,32 @@ function makeMessageParentAndCreateChild(nodeId, childMessage) {
       session.close();
       throw error;
     })
+}
+
+function getChannelInfoById(identifier) {
+  var session = driver.session();
+  return resultPromise = session.run(
+    `MATCH (c:Channel WHERE c.name=${name} RETURN c)`
+  ).then(result => {
+    session.close()
+    let x = {channelName: result.records[0].get(0).properties.name,
+            channelId: result.records[0].get(0).identity}
+    return x
+  })
+  .catch(error => {
+    session.close();
+    throw error;
+  })
+}
+
+function createNewChannel(channelName) {
+  //TODO: add in error handling for when two channels created of same name
+  var
+  return "i'm unimplemented :)"
+}
+
+function getParentOfNode() {
+  //TODO: Unimplemented
 }
 
 exports.getChildMessagesForNode = getChildMessagesForNode
