@@ -99,7 +99,7 @@ function getChannelInfoById(identifier) {
     session.close()
     let x = {channelName: result.records[0].get(0).properties.name,
             channelId: result.records[0].get(0).identity}
-    return x
+    return x;
   })
   .catch(error => {
     session.close();
@@ -109,8 +109,19 @@ function getChannelInfoById(identifier) {
 
 function createNewChannel(channelName) {
   //TODO: add in error handling for when two channels created of same name
-  var
-  return "i'm unimplemented :)"
+  var session = driver.session();
+  return resultPromise = session.run(
+    `CREATE (c:Channel {isParent: true, name: ${channelName}}) RETURN c`
+  ).then(result => {
+    session.close()
+    let x = {channelName: result.records[0].get(0).properties.name,
+            channelId: result.records[0].get(0).identity}
+    return x;
+  })
+  .catch(error => {
+    session.close();
+    throw error;
+  })
 }
 
 function getParentOfNode() {
