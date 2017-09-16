@@ -259,7 +259,7 @@ Thanks :)*/
                     debugger;
                     obj = branches[i]
                     console.log(obj)
-                    listTree += `<li id=${obj.id}> <a href'localhost:3000/chat/${obj.id}'>${obj.message} </a>`;
+                    listTree += `<li id=${obj.id}> <a href='/chat/${obj.id}'>${obj.message} </a>`;
                     if(obj.hasOwnProperty('children')) {
                       debugger;
                       listTree += `<ul id=${obj.id}>`;

@@ -64,7 +64,8 @@ function getNodeTree(nodeId) {
 
     let extracted = results.records.map(result => extraction(result.get(0)))
     //TODO: Make root node child
-    extracted.push({id: 370, message: "channel name"})
+    //TODO: get actual node and message
+    extracted.push({id: nodeId, message: "channel name"})
     flatToNested = new FlatToNested();
     let flattened = flatToNested.convert(extracted)
     console.log("flattened:" + flattened)

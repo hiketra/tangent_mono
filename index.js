@@ -9,7 +9,7 @@ var _ = require('lodash');
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
-    api.getChildMessagesForNode(375).then(msgs => {
+    api.getChildMessagesForNode(370).then(msgs => {
         api.getNodeTree(370).then(tree => {
             res.render('index.ejs', {
                 messages: msgs.reverse(),
@@ -19,6 +19,18 @@ app.get('/', function(req, res) {
     }).catch(error => {
         console.log(error)
     })
+});
+
+app.get('/chat/:nodeId', function(req, res) {
+  let nodeId = req.params.nodeId;
+  api.getChildMessagesForNode(nodeId).then(msgs => {
+    api.getNodeTree(nodeId).then(tree => {
+      res.render('index.ejs', {
+        messages: msgs.reverse(),
+        nodes: tree
+      })
+    })
+  })
 });
 
 
