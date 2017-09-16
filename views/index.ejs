@@ -2,254 +2,276 @@
 <html>
 
 <head>
-    <title>Socket.IO chat</title>
-    <style>
+	<title>Socket.IO chat</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
 
-    * {margin: 0; padding: 0;}
+		.tree ul {
+			padding-top: 20px;
+			position: relative;
 
-.tree ul {
-	padding-top: 20px; position: relative;
+			transition: all 0.5s;
+			-webkit-transition: all 0.5s;
+			-moz-transition: all 0.5s;
+		}
 
-	transition: all 0.5s;
-	-webkit-transition: all 0.5s;
-	-moz-transition: all 0.5s;
-}
+		.tree li {
+			float: left;
+			text-align: center;
+			list-style-type: none;
+			position: relative;
+			padding: 20px 5px 0 5px;
 
-.tree li {
-	float: left; text-align: center;
-	list-style-type: none;
-	position: relative;
-	padding: 20px 5px 0 5px;
+			transition: all 0.5s;
+			-webkit-transition: all 0.5s;
+			-moz-transition: all 0.5s;
+		}
+		/*We will use ::before and ::after to draw the connectors*/
 
-	transition: all 0.5s;
-	-webkit-transition: all 0.5s;
-	-moz-transition: all 0.5s;
-}
+		.tree li::before,
+		.tree li::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 50%;
+			border-top: 1px solid #ccc;
+			width: 50%;
+			height: 20px;
+		}
 
-/*We will use ::before and ::after to draw the connectors*/
-
-.tree li::before, .tree li::after{
-	content: '';
-	position: absolute; top: 0; right: 50%;
-	border-top: 1px solid #ccc;
-	width: 50%; height: 20px;
-}
-.tree li::after{
-	right: auto; left: 50%;
-	border-left: 1px solid #ccc;
-}
-
-/*We need to remove left-right connectors from elements without
+		.tree li::after {
+			right: auto;
+			left: 50%;
+			border-left: 1px solid #ccc;
+		}
+		/*We need to remove left-right connectors from elements without
 any siblings*/
-.tree li:only-child::after, .tree li:only-child::before {
-	display: none;
-}
 
-/*Remove space from the top of single children*/
-.tree li:only-child{ padding-top: 0;}
+		.tree li:only-child::after,
+		.tree li:only-child::before {
+			display: none;
+		}
+		/*Remove space from the top of single children*/
 
-/*Remove left connector from first child and
+		.tree li:only-child {
+			padding-top: 0;
+		}
+		/*Remove left connector from first child and
 right connector from last child*/
-.tree li:first-child::before, .tree li:last-child::after{
-	border: 0 none;
-}
-/*Adding back the vertical connector to the last nodes*/
-.tree li:last-child::before{
-	border-right: 1px solid #ccc;
-	border-radius: 0 5px 0 0;
-	-webkit-border-radius: 0 5px 0 0;
-	-moz-border-radius: 0 5px 0 0;
-}
-.tree li:first-child::after{
-	border-radius: 5px 0 0 0;
-	-webkit-border-radius: 5px 0 0 0;
-	-moz-border-radius: 5px 0 0 0;
-}
 
-/*Time to add downward connectors from parents*/
-.tree ul ul::before{
-	content: '';
-	position: absolute; top: 0; left: 50%;
-	border-left: 1px solid #ccc;
-	width: 0; height: 20px;
-}
+		.tree li:first-child::before,
+		.tree li:last-child::after {
+			border: 0 none;
+		}
+		/*Adding back the vertical connector to the last nodes*/
 
-.tree li a{
-	border: 1px solid #ccc;
-	padding: 5px 10px;
-	text-decoration: none;
-	color: #666;
-	font-family: arial, verdana, tahoma;
-	font-size: 11px;
-	display: inline-block;
+		.tree li:last-child::before {
+			border-right: 1px solid #ccc;
+			border-radius: 0 5px 0 0;
+			-webkit-border-radius: 0 5px 0 0;
+			-moz-border-radius: 0 5px 0 0;
+		}
 
-	border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
+		.tree li:first-child::after {
+			border-radius: 5px 0 0 0;
+			-webkit-border-radius: 5px 0 0 0;
+			-moz-border-radius: 5px 0 0 0;
+		}
+		/*Time to add downward connectors from parents*/
 
-	transition: all 0.5s;
-	-webkit-transition: all 0.5s;
-	-moz-transition: all 0.5s;
-}
+		.tree ul ul::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 50%;
+			border-left: 1px solid #ccc;
+			width: 0;
+			height: 20px;
+		}
 
-/*Time for some hover effects*/
-/*We will apply the hover effect the the lineage of the element also*/
-.tree li a:hover, .tree li a:hover+ul li a {
-	background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
-}
-/*Connector styles on hover*/
-.tree li a:hover+ul li::after,
-.tree li a:hover+ul li::before,
-.tree li a:hover+ul::before,
-.tree li a:hover+ul ul::before{
-	border-color:  #94a0b4;
-}
+		.tree li a {
+			border: 1px solid #ccc;
+			padding: 5px 10px;
+			text-decoration: none;
+			color: #666;
+			font-family: arial, verdana, tahoma;
+			font-size: 11px;
+			display: inline-block;
 
-/*Thats all. I hope you enjoyed it.
+			border-radius: 5px;
+			-webkit-border-radius: 5px;
+			-moz-border-radius: 5px;
+
+			transition: all 0.5s;
+			-webkit-transition: all 0.5s;
+			-moz-transition: all 0.5s;
+		}
+		/*Time for some hover effects*/
+		/*We will apply the hover effect the the lineage of the element also*/
+
+		.tree li a:hover,
+		.tree li a:hover+ul li a {
+			background: #c8e4f8;
+			color: #000;
+			border: 1px solid #94a0b4;
+		}
+		/*Connector styles on hover*/
+
+		.tree li a:hover+ul li::after,
+		.tree li a:hover+ul li::before,
+		.tree li a:hover+ul::before,
+		.tree li a:hover+ul ul::before {
+			border-color: #94a0b4;
+		}
+		/*Thats all. I hope you enjoyed it.
 Thanks :)*/
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font: 13px Helvetica, Arial;
-        }
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
 
-        #current-chat {
-            width: 75%
-        }
+		body {
+			font: 13px Helvetica, Arial;
+		}
 
-        form {
-            background: #000;
-            padding: 3px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+		#current-chat {
+			width: 75%
+		}
 
-        form input {
-            border: 0;
-            padding: 10px;
-            width: 90%;
-            margin-right: .5%;
-        }
+		form {
+			background: #000;
+			padding: 3px;
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+		}
 
-        form button {
-            width: 9%;
-            background: rgb(130, 224, 255);
-            border: none;
-            padding: 10px;
-        }
+		form input {
+			border: 0;
+			padding: 10px;
+			width: 90%;
+			margin-right: .5%;
+		}
 
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
+		form button {
+			width: 9%;
+			background: rgb(130, 224, 255);
+			border: none;
+			padding: 10px;
+		}
 
-        #messages li {
-            padding: 5px 10px;
-        }
+		#messages {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+		}
 
-        #messages li:nth-child(odd) {
-            background: #eee;
-        }
+		#messages li {
+			padding: 5px 10px;
+		}
 
-        #messages {
-            margin-bottom: 40px
-        }
-    </style>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		#messages li:nth-child(odd) {
+			background: #eee;
+		}
+
+		#messages {
+			margin-bottom: 40px
+		}
+	</style>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 
 <body>
-    <div id="current-chat">
-        <ul id="messages">
-            <% messages.forEach(function(message){%>
-                <li id="<%= message.identity %>">
-                    <%= message.message %>
-                        <div align="right">
-                            <%= message.timeHours %>:
-                                <%= message.timeMinutes %>
-                                    <button type="button" class="btn btn-default" aria-label="Right Align" onclick="createSubthread(<%=message.identity%>)">
+	<div id="current-chat">
+		<ul id="messages">
+			<% messages.forEach(function(message){%>
+				<li id="<%= message.identity %>">
+					<%= message.message %>
+						<div align="right">
+							<%= message.timeHours %>:
+								<%= message.timeMinutes %>
+									<button type="button" class="btn btn-default" aria-label="Right Align" onclick="createSubthread(<%=message.identity%>)">
                   <span class="glyphicon glyphicon-leaf" aria-hidden="true"></span>
               </button>
-                        </div>
-                </li>
-                <% }) %>
-        </ul>
-        <form action="">
-            <input id="m" autocomplete="off" /><button>Send</button>
-        </form>
-        <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-        <script>
-            var subthreadCreation = false;
-            var newParent = null;
+						</div>
+				</li>
+				<% }) %>
+		</ul>
+		<form action="">
+			<input id="m" autocomplete="off" /><button>Send</button>
+		</form>
+		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+		<script>
+			var subthreadCreation = false;
+			var newParent = null;
 
-            function createSubthread(node) {
-                console.log("in the subthread, setting node to: " + node)
-                subthreadCreation = true;
-                newParent = node;
-            }
+			function createSubthread(node) {
+				console.log("in the subthread, setting node to: " + node)
+				subthreadCreation = true;
+				newParent = node;
+			}
 
-            function addNewMessage(msg) {
-                var liElement = document.createElement("li");
-                liElement.setAttribute("id", msg.identity);
-                liElement.appendChild(document.createTextNode(msg.message));
-                var timeStamp = document.createElement("div");
-                timeStamp.setAttribute("align", "right");
-                timeStamp.innerHTML =
-                    `${msg.timeHours}:${msg.timeMinutes} <button type='button' class='btn btn-default' aria-label='Right Align' onclick='createSubthread(${msg.identity})'>
+			function addNewMessage(msg) {
+				var liElement = document.createElement("li");
+				liElement.setAttribute("id", msg.identity);
+				liElement.appendChild(document.createTextNode(msg.message));
+				var timeStamp = document.createElement("div");
+				timeStamp.setAttribute("align", "right");
+				timeStamp.innerHTML =
+					`${msg.timeHours}:${msg.timeMinutes} <button type='button' class='btn btn-default' aria-label='Right Align' onclick='createSubthread(${msg.identity})'>
               <span class='glyphicon glyphicon-leaf' aria-hidden='true'></span>
               </button>`
-                liElement.appendChild(timeStamp);
-                $('#messages').append(liElement);
-            }
+				liElement.appendChild(timeStamp);
+				$('#messages').append(liElement);
+			}
 
-            $(function() {
+			$(function() {
 
-                var socket = io();
-                $('form').submit(function() {
-                    if (subthreadCreation) {
-                        var channel = newParent;
-                    } else {
-                        var channel = 370;
-                    }
-                    console.log(subthreadCreation)
-                    var msg = $('#m').val()
-                    console.log(channel)
-                    console.log(msg)
-                    var messageBundle = {
-                        parentNode: channel,
-                        message: msg.toString()
-                    }
-                    console.log(`bundle node ${messageBundle.parentNode} message ${messageBundle.message}`)
-                    console.log("Inside the page" + messageBundle)
-                    socket.emit('chat message', messageBundle);
-                    $('#m').val('');
-                    subthreadCreation = false;
-                    return false;
-                });
-                socket.on('chat message', function(msg) {
-                    addNewMessage(msg);
-                    window.scrollTo(0, document.body.scrollHeight);
-                });
-                socket.on('retrieved_messages', function(messages) {
-                    $('#messages').append($('<li>').text(messages));
-                    window.scrollTo(0, document.body.scrollHeight);
-                })
-            });
-
-        </script>
-    </div>
-    <div class="tree">
-    <ul align="right">
-      <li><a href="blah blah">Channel</a>
-      <ul>
-            <%
+				var socket = io();
+				$('form').submit(function() {
+					if (subthreadCreation) {
+						var channel = newParent;
+					} else {
+						var channel = 370;
+					}
+					console.log(subthreadCreation)
+					var msg = $('#m').val()
+					console.log(channel)
+					console.log(msg)
+					var messageBundle = {
+						parentNode: channel,
+						message: msg.toString()
+					}
+					console.log(`bundle node ${messageBundle.parentNode} message ${messageBundle.message}`)
+					console.log("Inside the page" + messageBundle)
+					socket.emit('chat message', messageBundle);
+					$('#m').val('');
+					subthreadCreation = false;
+					return false;
+				});
+				socket.on('chat message', function(msg) {
+					addNewMessage(msg);
+					window.scrollTo(0, document.body.scrollHeight);
+				});
+				socket.on('retrieved_messages', function(messages) {
+					$('#messages').append($('<li>').text(messages));
+					window.scrollTo(0, document.body.scrollHeight);
+				})
+			});
+		</script>
+	</div>
+	<div class="tree">
+		<ul align="right">
+			<li><a href="chat/<%=nodes.id%>"><%= nodes.message%></a>
+				<ul>
+					<%
+                if('children' in nodes){
                 console.log(`obtained nodes ${JSON.stringify(nodes, null, 2)}`);
                 var listTree = ``;
                 debugger;
@@ -274,13 +296,14 @@ Thanks :)*/
                 }
                 console.log(`child nodes to be processed nodes ${JSON.stringify(nodes.children, null, 2)}`);
                 traverse(nodes.children)
+              }
                 %>
-                <%- listTree %>
+						<%- listTree %>
 
-                </li>
-            </ul>
-        </ul>
-    </div>
+			</li>
+			</ul>
+		</ul>
+	</div>
 </body>
 
 </html>
