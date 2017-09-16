@@ -135,12 +135,23 @@ Thanks :)*/
 			box-sizing: border-box;
 		}
 
+    .tree-position {
+      width: 25%;
+      text-align: right;
+      color: blue;
+      display: inline-block;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+    }
+
 		body {
 			font: 13px Helvetica, Arial;
 		}
 
 		#current-chat {
-			width: 75%
+			width: 70%;
+      display: inline-block;
 		}
 
 		form {
@@ -235,10 +246,11 @@ Thanks :)*/
 
 				var socket = io();
 				$('form').submit(function() {
+          debugger;
 					if (subthreadCreation) {
 						var channel = newParent;
 					} else {
-						var channel = 370;
+						var channel = <%=channelId%>;
 					}
 					console.log(subthreadCreation)
 					var msg = $('#m').val()
@@ -254,9 +266,11 @@ Thanks :)*/
 					$('#m').val('');
 					subthreadCreation = false;
 					return false;
+          debugger;
 				});
 				socket.on('chat message', function(msg) {
 					addNewMessage(msg);
+          debugger;
 					window.scrollTo(0, document.body.scrollHeight);
 				});
 				socket.on('retrieved_messages', function(messages) {
@@ -266,7 +280,7 @@ Thanks :)*/
 			});
 		</script>
 	</div>
-	<div class="tree">
+	<div class="tree tree-position" align="right">
 		<ul align="right">
 			<li><a href="chat/<%=nodes.id%>"><%= nodes.message%></a>
 				<ul>

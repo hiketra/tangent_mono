@@ -35,7 +35,8 @@ app.get('/chat/:nodeId', function(req, res) {
       debugger;
 			res.render('index.ejs', {
 				messages: msgs.reverse(),
-				nodes: tree
+				nodes: tree,
+        channelId: nodeId
 			})
 		})
 	})})
@@ -64,6 +65,7 @@ io.on('connection', function(socket) {
 	socket.on('chat message', function(messageBundle) {
 		console.log(`received message:${messageBundle}`)
 		api.getNodeTree(370)
+    debugger;
 		api.makeMessageParentAndCreateChild(messageBundle.parentNode, messageBundle.message).then(msg => {
 			io.emit('chat message', msg)
 		}).catch(error => {
