@@ -260,7 +260,7 @@ Thanks :)*/
 					console.log(channel)
 					console.log(msg)
 					var messageBundle = {
-						currentRoom: <%= channelId %>,
+						currentRoom: <%=channelId%>,
 						parentNode: channel,
 						message: msg.toString()
 					}
@@ -284,9 +284,9 @@ Thanks :)*/
 				socket.on('tree update', function(tree) {
 					debugger;
 					console.log(tree);
+					var listTree = ``;
 					if('children' in tree){
 					console.log(`obtained nodes ${JSON.stringify(tree, null, 2)}`);
-					var listTree = ``;
 					debugger;
 					function traverse(branches) {
 						debugger;
@@ -312,7 +312,7 @@ Thanks :)*/
 					traverse(tree.children)
 				}
 				debugger;
-						$('#updateable').empty().append('boo' + listTree);
+						$('#updateable').empty().append(listTree);
 				});
 			});
 		</script>
