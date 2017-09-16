@@ -245,28 +245,40 @@ Thanks :)*/
 
         </script>
     </div>
-    <ul id="tree" class="tree" align="right">
-      <li>HERE</li>
+    <div class="tree">
+    <ul align="right">
+      <li><a href="blah blah">Channel</a>
+      <ul>
             <%
                 console.log(`obtained nodes ${JSON.stringify(nodes, null, 2)}`);
                 var listTree = ``;
+                debugger;
                 function traverse(branches) {
-                  for(i=0; i < branches.length; i++) {
+                  for(let i=0; i < branches.length; i++) {
                     // console.log(branches)
+                    debugger;
                     obj = branches[i]
                     console.log(obj)
-                    listTree += `<li id=${obj.id}> <a href'localhost:3000/chat/${obj.id}'>${obj.message} </a> </li>`;
+                    listTree += `<li id=${obj.id}> <a href'localhost:3000/chat/${obj.id}'>${obj.message} </a>`;
                     if(obj.hasOwnProperty('children')) {
+                      debugger;
                       listTree += `<ul id=${obj.id}>`;
                       traverse(branches[i].children);
                       listTree += `</ul>`
                     }
+                    else {
+                      debugger;
+                    }
+                    listTree += ` </li>`;
                   }
                 }
+                console.log(`child nodes to be processed nodes ${JSON.stringify(nodes.children, null, 2)}`);
                 traverse(nodes.children)
                 %>
                 <%- listTree %>
 
+                </li>
+            </ul>
         </ul>
     </div>
 </body>

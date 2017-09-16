@@ -48,6 +48,7 @@ function getNodeTree(nodeId) {
     session.close()
 
     function extraction(relation) {
+      //TODO: a lot of this data redundant, e.g relationDegree
       //takes in result.get(0)
       let relationDegree = relation.length-1 //0-indexed tree-level
       let maxRecord = relation[relationDegree]
@@ -62,7 +63,8 @@ function getNodeTree(nodeId) {
     console.log(results)
 
     let extracted = results.records.map(result => extraction(result.get(0)))
-    extracted.push({id: 370})
+    //TODO: Make root node child
+    extracted.push({id: 370, message: "channel name"})
     flatToNested = new FlatToNested();
     let flattened = flatToNested.convert(extracted)
     console.log("flattened:" + flattened)

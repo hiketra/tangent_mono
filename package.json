@@ -8,6 +8,7 @@
     "express": "^4.15.2",
     "js-sorting-algorithms": "^1.0.6",
     "neo4j-driver": "^1.2.0",
+    "node-debugger": "^1.0.0",
     "node-inspector": "^1.1.1",
     "socket.io": "^1.7.3"
   },
