@@ -62,12 +62,16 @@ app.get('/healthcheck', function(req, res) {
 
 io.on('connection', function(socket) {
 
+	socket.on('room', function(room){
+		socket.join(room);
+	});
+
 	socket.on('chat message', function(messageBundle) {
 		console.log(`received message:${messageBundle}`)
 		api.getNodeTree(370)
     debugger;
 		api.makeMessageParentAndCreateChild(messageBundle.parentNode, messageBundle.message).then(msg => {
-			io.emit('chat message', msg)
+			io.sockets.in(messageBundle.parentNode).emit('chat message', msg)
 		}).catch(error => {
 			console.log(error)
 		})

@@ -244,7 +244,10 @@ Thanks :)*/
 
 			$(function() {
 
-				var socket = io();
+				var socket = io.connect();
+				socket.on('connect', function() {
+					socket.emit('room', <%=channelId%>)
+				})
 				$('form').submit(function() {
           debugger;
 					if (subthreadCreation) {
