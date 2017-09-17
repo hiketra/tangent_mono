@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "my first socket.io app",
   "enginges": {
-    "node"; 8.4.0
+    "node": "8.4.0"
   }
   "dependencies": {
     "body-parser": "^1.18.1",
