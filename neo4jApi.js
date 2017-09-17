@@ -40,7 +40,7 @@ function getNodeTree(channelInfo) {
   var session = driver.session();
   console.log(`Obtaining messages for ${nodeId}`)
   return resultPromise = session.run(
-    `START n=node(${nodeId}) MATCH (n)-[r*..]->(m) WHERE m.isParent=TRUE RETURN EXTRACT(rel IN r | [startNode(rel),endNode(rel)]) as nodePairCollection`
+    `START n=node(${nodeId}) MATCH (n)-[r*..5]->(m) WHERE m.isParent=TRUE RETURN EXTRACT(rel IN r | [startNode(rel),endNode(rel)]) as nodePairCollection`
   ).then(results => {
     session.close()
 
