@@ -10,6 +10,8 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(bodyParser.json());
 
 app.set('view engine', 'ejs');
@@ -41,6 +43,8 @@ app.get('/chat/:nodeId', function(req, res) {
 		})
 	})})
 });
+
+
 
 app.get('/create-channel', function(req, res) {
 	res.render('createNewChannel.ejs', {})

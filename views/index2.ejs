@@ -1,0 +1,131 @@
+<html>
+<head>
+    <link href="../public/stylesheets/bootstrap.css" rel="stylesheet" />
+    <link href="../public/stylesheets/style.css" rel="stylesheet" />
+    <link href="../public/stylesheets/tree.css" rel="stylesheet" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="../public/scripts/chat.js" />
+    <title>Tangent.io</title>
+    <script>
+      function initialise() {
+        setup(<%=channelId%>);
+      }
+    </script>
+</head>
+
+<body>
+    <div class="container" style="height: 100%; width:100%;">
+
+        <div class="row h-25" style="width:100%">
+            <div class="col col-8">
+            </div>
+            <div class="col col-4" align="right">
+                <h1>Tangent.io!</h1>
+            </div>
+        </div>
+
+        <div class="row h-75" style="width: 100%">
+            <div class="col-sm-6 col-sm-offset-3 frame">
+                <ul class="message-list" id="messages">
+                    <li style="width:100%">
+                        <div class="msj-rta macro">
+                            <div class="text text-r">
+                                <p>Blah blah blah hello world what's up? :)</p>
+                                <p><small>10/10/10 10:28 PM</small></p>
+                            </div>
+                            <div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="https://thumbs.dreamstime.com/z/happy
+                                    -man-perfect-white-smile-thumb-up-isolated-background-40905445.jpg" />
+                            </div>
+                        </div>
+                    </li>
+                    <li style="width:100%;">
+                        <div class="msj macro">
+                            <div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="https://thumbs.dreamstime.com/z/happy-man-perfect-white-smile-thumb-up-isolated-background-40905445.jpg" />
+                            </div>
+                            <div class="text text-l">
+                                <p>Hey :)</p>
+                                <p><small>10/10/10 10:28 PM</small></p>
+                            </div>
+                        </div>
+                    </li>
+                    <li style="width:100%;">
+                        <div class="msj macro">
+                            <div class="avatar" style="padding:0px 0px 0px 10px !important"><img class="img-circle" style="width:100%;" src="https://thumbs.dreamstime.com/z/happy-man-perfect-white-smile-thumb-up-isolated-background-40905445.jpg" />
+                            </div>
+                            <div class="text text-l">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus molestie, neque eu bibendum convallis, nibh lacus ultrices dui, id posuere ante metus id eros. Sed sit amet varius est, eu ultrices velit. Donec lacinia enim vitae diam egestas imperdiet. Mauris viverra pretium purus et commodo. In tempus mattis elit, vel finibus ligula molestie et. Sed vel nibh mattis, auctor lorem eu, lobortis magna. Quisque vel sem a diam blandit porttitor et id libero. Suspendisse sodales eget mi in pulvinar. Integer enim massa, pellentesque eget justo ac, commodo imperdiet nibh. In hac habitasse platea dictumst. Vivamus condimentum mauris risus, a pretium magna aliquam tincidunt.</p>
+                                <div style="display: inline-flex; width: 100%">
+                                    <div style="display: flex; align-items: left;">
+                                        <p style=" width: 90%;"><small>Sent by Phil at 10/10/10 10:28 PM</small></p>
+                                    </div>
+                                    <div style="display: flex; align-items: right;">
+                                        <p style="float:left; text-align: left; width: 5%;"><small><a href="google">#67</a></small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+                <div class="display:flex; align-items: center;">
+                    <!--
+                    <div class="msj-rta macro" style="margin:auto; border: 10px !important;">
+                        <div class="text text-r" style="background:whitesmoke !important">
+-->
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                                    #
+                                </span>
+                        <span class="input-group-addon" style="width: 20%">
+                                    <input type="number" aria-label="Enter a message ID to sub-thread too">
+                                </span>
+                        <input type="text" class="form-control" style="width: 60%" placeholder="Type a message" />
+                    </div>
+                    <!--
+                        </div>
+                    </div>
+-->
+                </div>
+            </div>
+            <div class="col-sm-7" align="center">
+                <div class="tree tree-position" id='tree' align="center">
+                    <ul>
+                        <li><a href="chat/370">First channel</a>
+                            <ul id="updateable">
+
+                                <li id=679> <a href='/chat/679'>effefee </a> </li>
+                                <li id=674> <a href='/chat/674'>hello </a> </li>
+                                <li id=673> <a href='/chat/673'>boo </a>
+                                    <ul id=673>
+                                        <li id=679> <a href='/chat/679'>effefee </a> </li>
+                                        <li id=674> <a href='/chat/674'>hello </a> </li>
+                                    </ul>
+                                </li>
+                                <li id=375> <a href='/chat/375'>hello </a>
+                                    <ul id=375>
+                                        <li id=413> <a href='/chat/413'>hello you :) </a> </li>
+                                    </ul>
+                                </li>
+                                <li id=383> <a href='/chat/383'>yellow </a> </li>
+                                <li id=406> <a href='/chat/406'>cheeese </a> </li>
+
+                        </li>
+                        </ul>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="channel-desc" style="align-items: center;">
+                    <h2>Your Channel</h2>
+                    <br>
+                    <h3>Channel Info</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus molestie, neque eu bibendum convallis, nibh lacus ultrices dui, id posuere ante metus id eros. Sed sit amet varius est, eu ultrices velit. Donec lacinia enim vitae diam egestas imperdiet. Mauris viverra pretium purus et commodo. In tempus mattis elit, vel finibus ligula molestie et. Sed vel nibh mattis, auctor lorem eu, lobortis magna. Quisque vel sem a diam blandit porttitor et id libero. Suspendisse sodales eget mi in pulvinar. Integer enim massa, pellentesque eget justo ac, commodo imperdiet nibh. In hac habitasse platea dictumst. Vivamus condimentum mauris risus, a pretium magna aliquam tincidunt.</p>
+                    <h3>Channel stats</h3>
+                    <p><b>Number of users currently online:</b> 2</p>
+                    <p><b>Channel active since: </b> 20/11/2017</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

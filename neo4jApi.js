@@ -1,11 +1,11 @@
 const neo4j = require('neo4j-driver').v1;
 const FlatToNested = require('flat-to-nested');
-//const driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo4j"));
-const graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
-const graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
-const graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
-
-const driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));
+const driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo4j"));
+// const graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
+// const graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
+// const graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
+//
+// const driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));
 
 function extractPropertiesAndNodeId(properties, identity) {
 	return {
